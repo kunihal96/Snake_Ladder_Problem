@@ -8,4 +8,40 @@ function rollDice()
   return $(( ( RANDOM % 6 )  + 1 ))
 }
 
+function getPlayOption()
+{
+    return $(( ( RANDOM % 3 )  + 1 ))
+}
+
+function playChance() #Take the current position input and roll dice and increment and decremnt poition accordingly
+{
+    currentPosition=$1  #current Position
+   
+    rollDice
+    diceValue=$?
+    #echo diceValue $diceValue
+   
+    getPlayOption
+    playOption=$?
+    #echo playOption $playOption
+   
+    case "$playOption" in  #When NoPlay(1) - Do nothing
+    2)  ((currentPosition+=$diceValue)) #Ladder(2)
+        if((currentPosition>$WinningPosition))
+        then
+            ((currentPosition-=$diceValue))
+        fi
+        ;;
+    3)  ((currentPosition-=$diceValue)) #Snake(3)
+        if((currentPosition<0))
+        then
+            currentPosition=0
+        fi
+        ;;
+    esac
+   
+    return $currentPosition
+}
+
+
 Player1Position=0
