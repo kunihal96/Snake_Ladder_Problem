@@ -1,7 +1,5 @@
 #! /bin/bash
 
-echo snake ladder problem solved here
-
 function rollDice()
 {
    return $(( ( RANDOM % 6 )  + 1 ))
@@ -44,14 +42,17 @@ function playChance()
 
 Player1Position=0
 WinningPosition=10
-
+noOfMoves=0
 while(true)
 do
+    ((noOfMoves++))
     playChance $Player1Position
     Player1Position=$?
+
     echo Position after Dice Roll $Player1Position
     if ((Player1Position >= $WinningPosition))
     then
+        echo No of moves taken to win $noOfMoves
         break
     fi    
 done
