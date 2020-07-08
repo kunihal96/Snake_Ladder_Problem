@@ -10,17 +10,17 @@ function getPlayOption()
     return $(( ( RANDOM % 3 )  + 1 ))
 }
 
-function playChance()
+function playChance() #Take the current position input and roll dice and increment and decremnt poition accordingly
 {
     currentPosition=$1  #current Position
    
     rollDice
     diceValue=$?
-    echo diceValue $diceValue
+    #echo diceValue $diceValue
    
     getPlayOption
     playOption=$?
-    echo playOption $playOption
+    #echo playOption $playOption
    
     case "$playOption" in  #When NoPlay(1) - Do nothing
     2)  ((currentPosition+=$diceValue)) #Ladder(2)
@@ -40,19 +40,42 @@ function playChance()
     return $currentPosition
 }
 
-Player1Position=0
-WinningPosition=10
-noOfMoves=0
-while(true)
-do
-    ((noOfMoves++))
-    playChance $Player1Position
-    Player1Position=$?
-
-    echo Position after Dice Roll $Player1Position
-    if ((Player1Position >= $WinningPosition))
+function announceWinner()
+{
+    gameEnd=0
+    if (($player1Position == $WinningPosition))
     then
-        echo No of moves taken to win $noOfMoves
-        break
-    fi    
+        echo Player 1 won
+        ((gameEnd=1))
+    fi
+   
+    if (($player2Position == $WinningPosition))
+    then
+        echo Player 2 won
+        ((gameEnd=1))
+    fi
+   
+    return $gameEnd
+}
+
+Player1Position=0
+Player2Position=0
+WinningPosition=10 #constant
+noOfMoves=0
+endgame=0
+
+while [[ $endgame -lt 1 ]]
+do
+    ((noOfMoves++))  #increment moves
+   
+    playChance $player1Position #play the chance
+    player1Position=$?  #overwrite with new position
+   
+    playChance $player2Position #play the chance
+    player2Position=$?  #overwrite with new position
+   
+    echo Player Postions after move $noOfMoves : Player1 $player1Position - Player2 $player2Position
+   
+    announceWinner
+    endgame=$?
 done
